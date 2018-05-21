@@ -81,7 +81,7 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER@%m"
+    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
   fi
 }
 
@@ -213,6 +213,14 @@ prompt_status() {
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
 }
 
+prompt_new_line() {
+	PROMPT+="
+"
+	NEWCOLOR=green
+	[[ $RETVAL -ne 0 ]] && NEWCOLOR=red
+	prompt_segment $NEWCOLOR black "#"
+}
+
 ## Main prompt
 build_prompt() {
   RETVAL=$?
@@ -225,7 +233,9 @@ build_prompt() {
   prompt_bzr
   prompt_hg
   prompt_end
-  PROMPT+=' '
+  prompt_new_line
+  prompt_end
+  PROMPT+=" "
 }
 
 autoload -U add-zsh-hook
